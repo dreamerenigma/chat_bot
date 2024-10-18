@@ -123,7 +123,7 @@ async def skip_photo_command(message: types.Message, state: FSMContext):
 @router.message(Command(commands=["myid"]))
 async def show_user_id_command_handler(message: types.Message):
     user_id = message.from_user.id
-    chat_id = message.chat.id
+    chat_id = abs(message.chat.id)
 
     response_message = (
         f"*Ваш ID:* `{user_id}`\n"

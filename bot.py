@@ -2,7 +2,7 @@ import asyncio
 from bot_setup import create_bot, create_dispatcher
 from database.database import create_tables
 from utils.language import messages
-from config import BASE_URL, WEBHOOK_PATH, HOST, PORT, USE_WEBHOOK
+from config import BASE_URL, WEBHOOK_PATH, HOST, PORT, USE_WEBHOOK, ENVIRONMENT
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
@@ -51,9 +51,10 @@ async def main():
     dispatcher = create_dispatcher()
 
     try:
-        if USE_WEBHOOK:
+        if ENVIRONMENT == "production" and USE_WEBHOOK:
             await start_webhook(bot, dispatcher)
         else:
+            # await bot.delete_webhook(drop_pending_updates=True)
             await start_long_polling(bot, dispatcher)
     finally:
         await bot.session.close()
