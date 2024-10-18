@@ -3,10 +3,10 @@ from aiogram.filters import BaseFilter
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import ChatPermissions
 from ban_words import ban_words
-from config import TOKEN_API
+from config import BOT_TOKEN
 from keyboards.inline_filter_keyboard import filter_keyboard, FilterCallback
 
-bot = Bot(token=TOKEN_API)
+bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
 dispatcher = Dispatcher(storage=storage)
 router = Router()

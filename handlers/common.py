@@ -1,4 +1,4 @@
-from aiogram import types, Router, F
+from aiogram import types, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from ban_words import ban_words
@@ -12,11 +12,14 @@ router = Router()
 
 profanity_filter = ProfanityFilter(ban_words)
 
+
 async def start_command(message: types.Message):
     await message.answer(welcome_text, parse_mode='HTML', disable_web_page_preview=True)
 
+
 async def help_command(message: types.Message):
     await message.answer(welcome_text, parse_mode='HTML', disable_web_page_preview=True)
+
 
 def register_handlers_common(dp):
     router.message.register(start_command, Command(commands=["start"]))
@@ -24,10 +27,12 @@ def register_handlers_common(dp):
     router.message(profanity_filter)(handle_profanity)
     dp.include_router(router)
 
+
 @router.message(Command(commands=["id"]))
 async def get_chat_id(message: types.Message):
     chat_id = message.chat.id
     await message.answer(f"ID группы: {chat_id}")
+
 
 @router.message(Command(commands=["token"]))
 async def generate_token_command(message: types.Message, state: FSMContext):
@@ -39,6 +44,7 @@ async def generate_token_command(message: types.Message, state: FSMContext):
         await state.set_state(BotState.waiting_for_token_retrieval)
     else:
         await message.answer("У вас нет доступных ботов для просмотра токена.")
+
 
 @router.message(Command(commands=["revoke"]))
 async def generate_revoke_token_command(message: types.Message, state: FSMContext):
@@ -112,3 +118,15 @@ async def skip_command(message: types.Message, state: FSMContext):
 async def skip_photo_command(message: types.Message, state: FSMContext):
     await message.answer("Пожалуйста, отправьте новый GIF. Используйте /skip, чтобы оставить GIF как есть, или /empty, чтобы удалить текущий GIF.")
     await state.clear()
+
+
+@router.message(Command(commands=["myid"]))
+async def show_user_id_command_handler(message: types.Message):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+
+    response_message = (
+        f"*Ваш ID:* `{user_id}`\n"
+        f"*Текущий чат ID:* `{chat_id}`"
+    )
+    await message.answer(response_message, parse_mode="MarkdownV2")
